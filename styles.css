@@ -1,0 +1,42 @@
+ .body{
+    height:100vh;
+ }
+ header{
+    text-align:center;
+    font-size:x-large;
+ }
+ .container{
+    border-style:groove;
+    border-color: black;
+    border-width:2.5px;
+    background-color: white;
+    margin:15px;
+    height:400px;
+    flex-basis:400px;
+    min-width:400px;
+    display:flex;
+    flex-wrap:wrap;
+    padding:0px;
+    align-content:flex-start;
+    align-content: center;
+ }
+ .square{
+    border-style:solid;
+    border-color:rgb(126, 126, 126);
+    background-color: white;
+    border-width:0.6px;
+    margin:0px;
+ }
+ #all{
+    display:flex;
+    padding:15px;
+ }
+ .input{
+    padding-right:10px;
+    display:flex;
+    height:30px;
+ }
+ #size{
+    display:flex;
+ }
+ 
