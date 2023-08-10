@@ -22,7 +22,7 @@ function makeGrid(input){
         let div=document.createElement('div');
         div.classList='square';
         // set ht and width of each square in grid, relative to container
-        let divWidth=(0.9125*(containerWidth/Math.sqrt(input)))+'px';
+        let divWidth=(0.99*(containerWidth/Math.sqrt(input)))+'px';
         div.style.width=divWidth;
         div.style.height=divWidth;
         container.appendChild(div);
@@ -38,4 +38,5 @@ function clearGrid(){
     }
     divElements=[];
 }
+
 
