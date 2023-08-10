@@ -12,9 +12,22 @@
 <body class="body">
     <header>Retro Sketch!</header>
     <div id="all">
-        <div class="input">
-            <input id='size'type="number" placeholder="size of grid:" autofocus>
-            <input id='submit'type="submit"></input>
+        <div id="sidebar">
+            <div class="input">
+                <input id='size'type="number" placeholder="change grid size" min="16"autofocus>
+                <input id='submit'type="submit" class="btn-outline-primary"></input>
+            </div>
+            <div class="input">
+                <div>Current Color:</div>
+                <div id="current"></div>
+            </div>
+            <div id="color"class="input">
+                <div>Select Color:</div>
+                <img class="cw"src="images/icon2.png">
+            </div>
+            <div class="input">
+            <input id="clear"class="btn-outline-primary" type="button" value="clear"></input>
+            </div>
         </div>
         <div id="container"class="container"></div>
     </div> 

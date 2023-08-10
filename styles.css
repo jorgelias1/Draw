@@ -30,12 +30,33 @@
     display:flex;
     padding:15px;
  }
+ #sidebar{
+   display:flex;
+   flex-direction: column;
+   gap:8px;
+   padding-right: 10px;
+ }
  .input{
-    padding-right:10px;
     display:flex;
     height:30px;
+    justify-content: flex-start;
+    align-items: center;
  }
- #size{
-    display:flex;
+ #current{
+   margin-left:5px;
+   display:flex;
+   height:37px;
+   flex-basis:70px;
+   border-style: solid;
+   border-width:2px;
  }
- 
+ .cw{
+   height:40px;
+   width:40px;
+ }
+ #submit{
+   border-radius: 4px;
+ }
+ #clear{
+   border-radius:10px;
+ }
