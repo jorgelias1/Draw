@@ -36,6 +36,12 @@
    gap:8px;
    padding-right: 10px;
  }
+ #size{
+   width:180px;
+ }
+ #size2{
+   width:240px;
+ }
  .input{
     display:flex;
     height:30px;
@@ -59,4 +65,7 @@
  }
  #clear{
    border-radius:10px;
+ }
+ #selector{
+   margin-bottom:15px;
  }

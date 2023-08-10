@@ -14,8 +14,11 @@
     <div id="all">
         <div id="sidebar">
             <div class="input">
-                <input id='size'type="number" placeholder="change grid size" min="16"autofocus>
+                <input id='size'type="text" placeholder="grid size (16-100)" min="16"autofocus>
                 <input id='submit'type="submit" class="btn-outline-primary"></input>
+            </div>
+            <div id="selector">
+                <input id='size2'type="range" value="16" min="16" max="100"></input>
             </div>
             <div class="input">
                 <div>Current Color:</div>
@@ -23,7 +26,8 @@
             </div>
             <div id="color"class="input">
                 <div>Select Color:</div>
-                <img class="cw"src="images/icon2.png">
+                <!-- <img class="cw"src="images/icon2.png" type="color"> -->
+                <input class="cw" type="color">
             </div>
             <div class="input">
             <input id="clear"class="btn-outline-primary" type="button" value="clear"></input>

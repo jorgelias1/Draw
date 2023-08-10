@@ -1,25 +1,51 @@
 const container=document.querySelector('#container');
 const containerWidth=container.offsetWidth;
+const selector=document.querySelector('#selector');
+const span=document.createElement('span');
+// const colors=document.createElement('input');
+
 let divCount;
 let divElements=[];
-makeGrid();
-// get user input for grid size
 let input;
+let size2=document.querySelector('#size2');
+// get user input for grid size
 let size=document.querySelector('#size');
 let submit=document.querySelector('#submit');
 let clear=document.querySelector('#clear');
+let color=document.querySelector('.cw');
+let currentColor;
 
+//initialize grid
+makeGrid(input);
+//all ways of changing grid size
 submit.addEventListener('click', ()=>{
-    input=document.getElementById("size").value;
+    input=size.value;
+    clearGrid();
+    makeGrid(input);
+    size2.value=input;
+})
+
+size2.addEventListener('change', ()=>{
+    input=size2.value;
     clearGrid();
     makeGrid(input);
 })
+
 size.addEventListener('keypress', function(e){
     if (e.key==='Enter'){
         input=document.getElementById("size").value;
         clearGrid();
         makeGrid(input);
+        size2.value=input;
     }
+})
+// clear button
+clear.addEventListener('click', ()=>{
+    clearGrid();
+    makeGrid(input);
+})
+color.addEventListener('change', ()=>{
+    currentColor=color.value;
 })
 // look at guitar example to make it look nice during transition from clear to make
 // could add picture editing into this! drop picture in and draw/filters.
@@ -50,8 +76,8 @@ function makeGrid(input){
         div.addEventListener('mousemove', ()=>{
             draw(div);
         })
- 
     }
+    showSize(input);
 }
 // clear grid
 function clearGrid(){
@@ -59,16 +85,24 @@ function clearGrid(){
         container.removeChild(divElements[i]);
     }
     divElements=[];
+    selector.removeChild(span);
 }
 //draw
 function draw(div){
     if (mouseIsDown){
-        div.style.backgroundColor='black';
+        div.style.backgroundColor=currentColor;
     }
 }
+// set color
+function showColors(){
+    colors.type='color';
+    document.getElementById('color').appendChild(colors);
+}
+function showSize(input){
+    if (typeof input==='undefined'){
+        input===16;
+    }
+    span.textContent='Grid Size: '+ Math.sqrt(input)+'x'+Math.sqrt(input);
+    selector.appendChild(span); 
+}
 
-clear.addEventListener('click', ()=>{
-    input=document.getElementById("size").value;
-    clearGrid();
-    makeGrid(input);
-})
