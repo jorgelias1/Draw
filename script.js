@@ -55,7 +55,12 @@ color.addEventListener('change', ()=>{
     r=false;
     currentColor=color.value;
 })
-
+// random color
+random.addEventListener('click', ()=>{
+    clearGrid();
+    r=true;
+    makeGrid(input);
+})
 
 // look at guitar example to make it look nice during transition from clear to make
 // could add picture editing into this! drop picture in and draw/filters.
@@ -76,7 +81,6 @@ function makeGrid(input){
         divCount++;
         divElements.push(div);
         // enable drawing on this square
-        if(!(r)){
         div.addEventListener('mouseup', function(){
             mouseIsDown=false;
         });
@@ -87,20 +91,6 @@ function makeGrid(input){
         div.addEventListener('mousemove', ()=>{
             draw(div);
         })
-    }
-        // enable random drawing
-        else{
-            div.addEventListener('mouseup', function(){
-                mouseIsDown=false;
-            });
-            div.addEventListener('mousedown', ()=>{
-                mouseIsDown=true;
-                drawR(div);
-            });
-            div.addEventListener('mousemove', ()=>{
-                drawR(div);
-            })
-        }
     }
     showSize(input);
 }
@@ -120,15 +110,12 @@ function draw(div){
         if (typeof currentColor==='undefined'){
             currentColor='black';
         }
+        if (r){
+            drawR(div);
+        }
         div.style.backgroundColor=currentColor;
     }
 }
-// random color
-random.addEventListener('click', ()=>{
-    clearGrid();
-    r=true;
-    makeGrid(input);
-})
 function drawR(div){
     if (mouseIsDown){
         if (typeof currentColor==='undefined'){
