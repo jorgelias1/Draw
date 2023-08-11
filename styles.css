@@ -3,7 +3,7 @@
  }
  header{
     text-align:center;
-    font-size:x-large;
+    font-size:xx-large;
  }
  #container{
     border-style:groove;
@@ -57,8 +57,9 @@
    border-width:2px;
  }
  .cw{
-   height:40px;
-   width:40px;
+   height:34px;
+   width:80px;
+   margin-left: 5px;
  }
  #submit{
    border-radius: 4px;
@@ -66,6 +67,13 @@
  #clear{
    border-radius:10px;
  }
+ #random{
+   color:black;
+ }
  #selector{
    margin-bottom:15px;
+ }
+ #image{
+   max-height:200px;
+   max-width:200px;
  }

@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 <body class="body">
-    <header>Retro Sketch!</header>
+    <header>PhotoFi</header>
     <div id="all">
         <div id="sidebar">
             <div class="input">
@@ -20,15 +20,19 @@
             <div id="selector">
                 <input id='size2'type="range" value="16" min="16" max="100"></input>
             </div>
-            <div class="input">
-                <div>Current Color:</div>
-                <div id="current"></div>
-            </div>
+
             <div id="color"class="input">
                 <div>Select Color:</div>
-                <!-- <img class="cw"src="images/icon2.png" type="color"> -->
                 <input class="cw" type="color">
             </div>
+            <div>
+                <input  id="random" type="button" class="btn" value="crazy color"></input>
+            </div>
+            <img id="output_image" class='image'>
+           <!-- image conversion to pixels -->
+            <input id="imageInput"type="file" accept="image/*">
+            <!-- <canvas id="canvas"></canvas> -->
+
             <div class="input">
             <input id="clear"class="btn-outline-primary" type="button" value="clear"></input>
             </div>

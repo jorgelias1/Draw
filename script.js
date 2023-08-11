@@ -1,7 +1,7 @@
 const container=document.querySelector('#container');
 const containerWidth=container.offsetWidth;
 const selector=document.querySelector('#selector');
-const span=document.createElement('span');
+const span=document.createElement('div');
 // const colors=document.createElement('input');
 
 let divCount;
@@ -12,8 +12,14 @@ let size2=document.querySelector('#size2');
 let size=document.querySelector('#size');
 let submit=document.querySelector('#submit');
 let clear=document.querySelector('#clear');
+//color select
 let color=document.querySelector('.cw');
+let random=document.querySelector('#random');
 let currentColor;
+let r;
+//image pixel data
+let imageData;
+
 
 //initialize grid
 makeGrid(input);
@@ -44,9 +50,13 @@ clear.addEventListener('click', ()=>{
     clearGrid();
     makeGrid(input);
 })
+//change color
 color.addEventListener('change', ()=>{
+    r=false;
     currentColor=color.value;
 })
+
+
 // look at guitar example to make it look nice during transition from clear to make
 // could add picture editing into this! drop picture in and draw/filters.
 // populate grid
@@ -66,6 +76,7 @@ function makeGrid(input){
         divCount++;
         divElements.push(div);
         // enable drawing on this square
+        if(!(r)){
         div.addEventListener('mouseup', function(){
             mouseIsDown=false;
         });
@@ -77,27 +88,70 @@ function makeGrid(input){
             draw(div);
         })
     }
+        // enable random drawing
+        else{
+            div.addEventListener('mouseup', function(){
+                mouseIsDown=false;
+            });
+            div.addEventListener('mousedown', ()=>{
+                mouseIsDown=true;
+                drawR(div);
+            });
+            div.addEventListener('mousemove', ()=>{
+                drawR(div);
+            })
+        }
+    }
     showSize(input);
 }
 // clear grid
 function clearGrid(){
+    r=false;
     for (let i=0;i<divCount;i++){
         container.removeChild(divElements[i]);
     }
     divElements=[];
     selector.removeChild(span);
+    currentColor='black';
 }
 //draw
 function draw(div){
     if (mouseIsDown){
+        if (typeof currentColor==='undefined'){
+            currentColor='black';
+        }
         div.style.backgroundColor=currentColor;
     }
 }
+// random color
+random.addEventListener('click', ()=>{
+    clearGrid();
+    r=true;
+    makeGrid(input);
+})
+function drawR(div){
+    if (mouseIsDown){
+        if (typeof currentColor==='undefined'){
+            currentColor='black';
+        }
+        let r=Math.floor(Math.random()*256);
+        let g=Math.floor(Math.random()*256);
+        let b=Math.floor(Math.random()*256);
+        currentColor='rgb('+r+','+g+','+b+')';
+        div.style.backgroundColor=currentColor;
+    }
+    else{
+    r=false;
+    currentColor='black';
+    }
+}
+
 // set color
 function showColors(){
     colors.type='color';
     document.getElementById('color').appendChild(colors);
 }
+//display current grid size
 function showSize(input){
     if (typeof input==='undefined'){
         input===16;
@@ -105,4 +159,33 @@ function showSize(input){
     span.textContent='Grid Size: '+ Math.sqrt(input)+'x'+Math.sqrt(input);
     selector.appendChild(span); 
 }
+
+// vars for getting image data
+const imageInput=document.querySelector('#imageInput');
+const canvas = document.createElement('canvas');
+// const canvas=document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+// get image array data
+imageInput.addEventListener('change', function(e){
+    let selectedImage=e.target.files[0];
+    let img;
+    if (selectedImage){
+        img=new Image();
+        img.onload=function(){
+            canvas.width=img.width;
+            canvas.height=img.height;
+            ctx.drawImage(img, 0,0);
+            imageData=ctx.getImageData(0,0,canvas.width,canvas.height);
+            filterImage(imageData);
+        }
+        img.src=URL.createObjectURL(selectedImage);
+    }
+})
+function filterImage(imageData){
+    console.log();
+    console.log(imageData.data);
+    
+}
+
 
