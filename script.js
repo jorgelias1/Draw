@@ -57,9 +57,7 @@ color.addEventListener('change', ()=>{
 })
 // random color
 random.addEventListener('click', ()=>{
-    clearGrid();
     r=true;
-    makeGrid(input);
 })
 
 // look at guitar example to make it look nice during transition from clear to make
@@ -127,12 +125,7 @@ function drawR(div){
         currentColor='rgb('+r+','+g+','+b+')';
         div.style.backgroundColor=currentColor;
     }
-    else{
-    r=false;
-    currentColor='black';
-    }
 }
-
 // set color
 function showColors(){
     colors.type='color';
