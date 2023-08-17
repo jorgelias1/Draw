@@ -2,7 +2,6 @@ const container=document.querySelector('#container');
 const containerWidth=container.offsetWidth;
 const selector=document.querySelector('#selector');
 const span=document.createElement('div');
-// const colors=document.createElement('input');
 
 let divCount;
 let divElements=[];
@@ -61,7 +60,6 @@ random.addEventListener('click', ()=>{
 })
 
 // look at guitar example to make it look nice during transition from clear to make
-// could add picture editing into this! drop picture in and draw/filters.
 // populate grid
 let mouseIsDown;
 function makeGrid(input){
@@ -88,7 +86,7 @@ function makeGrid(input){
         });
         div.addEventListener('mousemove', ()=>{
             draw(div);
-        })
+        })        
     }
     showSize(input);
 }
@@ -100,6 +98,7 @@ function clearGrid(){
     }
     divElements=[];
     selector.removeChild(span);
+    color.value='#000000';
     currentColor='black';
 }
 //draw
@@ -147,25 +146,85 @@ const canvas = document.createElement('canvas');
 const ctx = canvas.getContext('2d');
 
 // get image array data
+let width;
+let height;
 imageInput.addEventListener('change', function(e){
     let selectedImage=e.target.files[0];
     let img;
     if (selectedImage){
         img=new Image();
         img.onload=function(){
-            canvas.width=img.width;
-            canvas.height=img.height;
+            width=img.width;
+            height=img.height;
             ctx.drawImage(img, 0,0);
-            imageData=ctx.getImageData(0,0,canvas.width,canvas.height);
-            filterImage(imageData);
+            imageData=ctx.getImageData(0,0,width,height);
+            getImageArray(imageData);
         }
         img.src=URL.createObjectURL(selectedImage);
     }
 })
-function filterImage(imageData){
+function getImageArray(imageData){
     console.log();
     console.log(imageData.data);
-    
+    clearGrid();
+    // clearImgGrid();
+    makeImageGrid(imageData);
 }
+function makeImageGrid(imageData){
+    // make 2D array from imageData
+    let OneDArray=imageData.data;
+    let twoDArray=[];
+    let k=0;
+    for (let i=0;i<height;i++){
+        twoDArray[i]=[];
+        for (let j=0;j<width;j++, k++){
+            twoDArray[i][j]=OneDArray[k];
+        }
+    }
+    // hide normal grid, make image grid
+    container.style.display='none';
+    const imageContainer=document.createElement('div');
+    imageContainer.classList='imageContainer';
+    let all=document.getElementById('all');
+    // set imageContainer size given img size. 
+    let dimensionRatio=width/height;
+    let gridSize=5000;
+    imageContainer.style.minWidth=dimensionRatio*550+'px';
+    imageContainer.style.height=550+'px';
+    let numCols=Math.round(Math.sqrt(gridSize*dimensionRatio));
+    let numRows=Math.round(gridSize/numCols);
+    // imageContainer.style.flexBasis=dimensionRatio*550+'px';
+    imageContainer.style.gridTemplateColumns=`repeat(${numCols}, 1fr)`;
+    imageContainer.style.gridTemplateRows=`repeat(${numRows}, 1fr)`;
+    imageContainer.style.gridAutoFlow='dense';
 
+    all.appendChild(imageContainer);
 
+    // input=((typeof input==='NaN')||(typeof input ==='undefined')||input<16||input>100) ? 16 : input;
+    // input=input*input;
+    divCount=0;
+    console.log(numCols, numRows);
+
+    for (let i=0;i<(numCols*numRows);i++){
+        let div=document.createElement('div');
+        div.classList='square2';
+        imageContainer.appendChild(div);
+        divCount++;
+        divElements.push(div);
+        // enable drawing on this square
+        div.addEventListener('mouseup', function(){
+            mouseIsDown=false;
+        });
+        div.addEventListener('mousedown', ()=>{
+            mouseIsDown=true;
+            draw(div);
+        });
+        div.addEventListener('mousemove', ()=>{
+            draw(div);
+        })        
+    }
+    // // showSize(input);
+}
+// function clearImgGrid(){
+//     divElements=[];
+// }
