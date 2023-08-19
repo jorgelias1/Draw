@@ -20,7 +20,6 @@
    background-color: white;
    margin-right:30px;
    display:grid;
-
    padding:0;
  }
  .square{
@@ -32,7 +31,7 @@
  }
  .square2{
    border-style:solid;
-   border-color:rgb(182, 182, 182);
+   border-color:rgb(182, 182, 182, 0.5);
    background-color: white;
    border-width:0.6px;
    margin:0px;
