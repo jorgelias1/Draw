@@ -1,10 +1,13 @@
 const container=document.querySelector('#container');
+const imageContainer=document.createElement('div');
+
 const containerWidth=container.offsetWidth;
 const selector=document.querySelector('#selector');
 const span=document.createElement('div');
 
 let divCount;
 let divElements=[];
+let imgElements=[];
 let input;
 let size2=document.querySelector('#size2');
 // get user input for grid size
@@ -16,9 +19,10 @@ let color=document.querySelector('.cw');
 let random=document.querySelector('#random');
 let currentColor;
 let r;
+let boolNorm;
+let boolImage;
 //image pixel data
 let imageData;
-
 
 //initialize grid
 makeGrid(input);
@@ -32,8 +36,16 @@ submit.addEventListener('click', ()=>{
 
 size2.addEventListener('change', ()=>{
     input=size2.value;
-    clearGrid();
-    makeGrid(input);
+    if (boolNorm===true){
+        clearGrid();
+        makeGrid(input);
+    }
+    else if (boolImage===true){
+        clearGrid();
+        // call function that loads image
+        loadImage();
+        // makeImageGrid(input);
+    }
 })
 
 size.addEventListener('keypress', function(e){
@@ -63,6 +75,7 @@ random.addEventListener('click', ()=>{
 // populate grid
 let mouseIsDown;
 function makeGrid(input){
+    boolNorm=true;
     input=((typeof input==='NaN')||(typeof input ==='undefined')||input<16||input>100) ? 16 : input;
     input=input*input;
     divCount=0;
@@ -93,6 +106,7 @@ function makeGrid(input){
 // clear grid
 function clearGrid(){
     r=false;
+    if (boolNorm===true){
     for (let i=0;i<divCount;i++){
         container.removeChild(divElements[i]);
     }
@@ -100,6 +114,17 @@ function clearGrid(){
     selector.removeChild(span);
     color.value='#000000';
     currentColor='black';
+    }
+    else if (boolImage===true){
+        for (let i=0;i<divCount;i++){
+            imageContainer.removeChild(imgElements[i]);
+        }
+        imgElements=[];
+        all.removeChild(imageContainer);
+        container.style.display='flex';
+    }
+    boolNorm=false;
+    boolImage=false;
 }
 //draw
 function draw(div){
@@ -148,10 +173,13 @@ const ctx = canvas.getContext('2d');
 // get image array data
 let width;
 let height;
-imageInput.addEventListener('change', function(e){
-    let selectedImage=e.target.files[0];
-    let img;
-    if (selectedImage){
+// load image
+function loadImage(e){    
+    if (!(typeof(selectedImage)==='undefined')){
+        if (!(typeof e==='undefined')){
+            selectedImage=e.target.files[0];
+            }
+        let img;
         img=new Image();
         img.onload=function(){
             width=img.width;
@@ -160,20 +188,28 @@ imageInput.addEventListener('change', function(e){
             canvas.height=height;
             ctx.drawImage(img, 0,0);
             imageData=ctx.getImageData(0,0,width,height);
-            console.log(imageData.data);
             getImageArray(imageData);
         }
         img.src=URL.createObjectURL(selectedImage);
     }
+    
+    else{
+        selectedImage=e.target.files[0];
+        // replace all below with loadImage() to be able to change 
+        loadImage();
+    }
+}
+imageInput.addEventListener('change', (e)=>{
+    loadImage(e);
 })
 function getImageArray(imageData){
     console.log();
     clearGrid();
-    // clearImgGrid();
-    makeImageGrid(imageData);
+    makeImageGrid(imageData, input);
 }
-function makeImageGrid(imageData){
+function makeImageGrid(imageData, input){
     // make 2D array from imageData
+    boolImage=true;
     let OneDArray=imageData.data;
     let twoDArray=[];
     let k=0;
@@ -186,25 +222,24 @@ function makeImageGrid(imageData){
 
             twoDArray[i][j] = [red, green, blue];
             k+=4;
-            // if (red===0 && green===0 && blue===0 && i<250 && j<250){
-            // console.log(i, j);
-            // }
         }
     }
     // hide normal grid, make image grid
     container.style.display='none';
-    const imageContainer=document.createElement('div');
     imageContainer.classList='imageContainer';
     let all=document.getElementById('all');
     // set imageContainer size given img size. 
     let dimensionRatio=width/height;
-    let gridSize=10000;
+    
+    input=((typeof input==='NaN')||(typeof input ==='undefined')||input<16||input>100) ? 75 : input;
+    input=input*input;
+    let gridSize=input;
     imageContainer.style.minWidth=dimensionRatio*550+'px';
     imageContainer.style.height=550+'px';
     let numCols=Math.round(Math.sqrt(gridSize*dimensionRatio));
     let numRows=Math.round(gridSize/numCols);
 
-    let proportions=getProportions(numCols, numRows, height, width);
+    let proportions=getProportions(numCols, numRows);
     
     // add grid columns/rows
     imageContainer.style.gridTemplateColumns=`repeat(${numCols}, 1fr)`;
@@ -213,8 +248,6 @@ function makeImageGrid(imageData){
 
     all.appendChild(imageContainer);
 
-    // input=((typeof input==='NaN')||(typeof input ==='undefined')||input<16||input>100) ? 16 : input;
-    // input=input*input;
     divCount=0;
     let cell_count=numCols*numRows;
 
@@ -237,26 +270,16 @@ function makeImageGrid(imageData){
                         r_sum+=twoDArray[m][n][0];
                         g_sum+=twoDArray[m][n][1];
                         b_sum+=twoDArray[m][n][2];
-                        // if (m>80 && n>80){
-                        //     div.style.backgroundColor='white';
-                        // }
-                        // if(r_sum===0 && g_sum===0 && b_sum===0){
-                        //     console.log(i,j,' ',m,n);
-                        // }
-
                     }
                 }
-                
                 
                 twoDArray[i][j][0]=r_sum/inner_divs;
                 twoDArray[i][j][1]=g_sum/inner_divs;
                 twoDArray[i][j][2]=b_sum/inner_divs;
-                // if(twoDArray[i][j][0]===0 && twoDArray[i][j][1]===0 && twoDArray[i][j][2]===0){
-                //     console.log(i, j, m, n);
-                // }
+
             // color the square
-            colorCell(div, twoDArray, proportions.divWidthProportion, proportions.divHeightProportion, proportions.correspPixelsCol, proportions.correspPixelsRow, i, j);
-            divElements.push(div);
+            colorCell(div, twoDArray, i, j);
+            imgElements.push(div);
             // enable drawing on this square
             div.addEventListener('mouseup', function(){
                 mouseIsDown=false;
@@ -270,15 +293,14 @@ function makeImageGrid(imageData){
             })    
     }    
     }
-    // // showSize(input);
+    showSize(input);
 }
     
-function colorCell(div, twoDArray, Wprop, Hprop, pixcol, pixrow, i, j){
-    // calculate avg pixel color in this area.!!!!!!!!!!!!
+function colorCell(div, twoDArray, i, j){
     // set div bg color to the average pixel color
     div.style.backgroundColor=`rgb(${twoDArray[i][j][0]}, ${twoDArray[i][j][1]}, ${twoDArray[i][j][2]})`;
 }
-function getProportions(numCols, numRows, height, width){
+function getProportions(numCols, numRows){
     // get proportion of image that each div takes up.
     let divWidthProportion=1/numCols;
     let divHeightProportion=1/numRows;
@@ -287,12 +309,9 @@ function getProportions(numCols, numRows, height, width){
     let correspPixelsRow=divWidthProportion*width;
     let correspPixelsCol=divHeightProportion*height;
     return {
-        divWidthProportion: divWidthProportion,
-        divHeightProportion: divHeightProportion,
         correspPixelsCol: correspPixelsCol,
         correspPixelsRow: correspPixelsRow,
     }
-
 }
 // function clearImgGrid(){
 //     divElements=[];
