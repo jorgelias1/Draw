@@ -4,6 +4,7 @@
  header{
     text-align:center;
     font-size:xx-large;
+    color:white;
  }
  #container{
     border:groove 2.5px;
@@ -44,18 +45,25 @@
    display:flex;
    flex-direction: column;
    gap:8px;
-   padding-right: 10px;
+   padding: 10px;
+   background-color: #679289;
+   border-radius:10px;
+   border:2px white solid;
+   background: linear-gradient(to bottom, #1D7874, #0f272b);
  }
  #size{
-   width:180px;
+   border-radius:4px;
+   border:black 1.5px groove;
  }
  #size2{
-   width:240px;
- }
+  display:flex; 
+  flex:auto;
+}
+
  .input{
     display:flex;
     height:30px;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
  }
  #current{
@@ -68,24 +76,91 @@
  }
  .cw{
    height:34px;
-   width:80px;
-   margin-left: 5px;
+   display:flex;
+   min-width:80px;
+   margin-left:10px;
  }
  #submit{
    border-radius: 4px;
+   color: #ffffff;
+   border-color: black;
+   background-color:#071e22;
  }
  #clear{
    border-radius:10px;
+   color:white;
+   background-color:#ee2e31;
+   border-color:#f4c095;
+   display:flex;
+   margin-top:auto;
  }
  #sidebar .btnn{
-   background-color:azure;
-   border: solid, bisque, 2px;
-   border-radius: 4px;
+  color:white;
+   background-color: #ee2e31;
+   border: solid #071e22 1px;
+   border-radius: 10px;
  }
  #selector{
    margin-bottom:15px;
+   display:flex;
+   flex-direction: column;
+   padding-left:2em;
+   padding-right:2em;   
  }
  #image{
    max-height:200px;
    max-width:200px;
  }
+ .filters{
+  display:flex;
+  justify-content: space-between;
+  border: 2px solid rgb(255, 255, 255, 0.5);
+  padding:10px;
+  gap:4px;
+  border-radius: 5px;
+ }
+ .filters>input, .file-upload, #submit{
+  background: linear-gradient(to bottom, #0b2f35, #113d53ca);
+ }
+ .brush>input{
+  background: linear-gradient(to bottom, #071e22, #123035);
+ }
+ .main>.input{
+  margin-top:4px;
+ }
+.body{
+  background: linear-gradient(to bottom, #112c31, #071e22);
+}
+ #all #sidebar{
+  color:white;
+ }
+ .heading{
+    text-align: center;
+ }
+ .brush{
+  display:flex;
+  flex-direction: column;
+  gap:5px;
+  border: 2px solid rgb(255, 255, 255, 0.5);
+  border-radius:10px;
+  padding:10px;
+ }
+ .file-upload {
+  border: 1px solid rgb(229, 208, 208);
+  padding: 6px 12px;
+  cursor: pointer;
+  display:flex;
+  justify-content: center;
+  margin-left:auto;
+  margin-right:auto;
+  color:rgb(249, 218, 218);
+  border-radius:10px
+}
+input[type="file"] {
+  display: none;
+}
+.main{
+  display:flex;
+  justify-content: center;
+  gap:4px
+}

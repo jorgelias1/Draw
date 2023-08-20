@@ -13,27 +13,38 @@
     <header>Photo.px</header>
     <div id="all">
         <div id="sidebar">
-            <div class="input">
-                <input id='size'type="text" placeholder="grid size (16-100)" min="16"autofocus>
-                <input id='submit'type="submit" class="btn-outline-primary"></input>
+            <div class="main">
+                    <div class="input">
+                        <input id='size'type="text" placeholder="grid size (16-100)" min="16"autofocus>
+                        <input id='submit'type="submit" class="btn-outline-primary"></input>
+                    </div>
             </div>
             <div id="selector">
                 <input id='size2'type="range" value="16" min="16" max="100"></input>
             </div>
-
-            <div id="color"class="input">
-                <div>Select Color:</div>
-                <input class="cw" type="color">
+            <label class="file-upload">upload an image!
+                <input id="imageInput"type="file" accept="image/*">
+            </label>
+            <div class="heading">brushes
+            <div class="brush">
+                <div id="color"class="input">
+                    <div>Select Color:</div>
+                    <input class="cw" type="color">
+                </div>
+                    <input  id="random" type="button" class="btnn" value="crazy color"></input>
+                    <input id="eraser" type="button" class="btnn" value="eraser">
             </div>
-                <input  id="random" type="button" class="btnn" value="crazy color"></input>
-                <input id="eraser" type="button" class="btnn" value="eraser">
-            <img id="output_image" class='image'>
+            </div>
+                <img id="output_image" class='image'>
            <!-- image conversion to pixels -->
-            <input id="imageInput"type="file" accept="image/*">
-            <input id="b/w" type="button" class="btnn" value="black and white">
-            <input id="reflect" type="button" class="btnn" value="reflect">
-            <input id="edge" type="button" class="btnn" value="edge detection">
-
+            <div class="heading">
+                <div>filters</div>
+                <div class="filters">
+                    <input id="b/w" type="button" class="btnn" value="black and white">
+                    <input id="reflect" type="button" class="btnn" value="reflect">
+                    <input id="edge" type="button" class="btnn" value="edge detection">
+                </div>
+            </div>
             <div class="input">
             <input id="clear"class="btn-outline-primary" type="button" value="clear"></input>
             </div>
