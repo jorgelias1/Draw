@@ -77,8 +77,10 @@
  #clear{
    border-radius:10px;
  }
- #random{
-   color:black;
+ #sidebar .btnn{
+   background-color:azure;
+   border: solid, bisque, 2px;
+   border-radius: 4px;
  }
  #selector{
    margin-bottom:15px;

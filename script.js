@@ -12,8 +12,13 @@ let input;
 let size2=document.querySelector('#size2');
 // get user input for grid size
 let size=document.querySelector('#size');
+// buttons
 let submit=document.querySelector('#submit');
 let clear=document.querySelector('#clear');
+let eraser=document.getElementById('eraser');
+let BnW=document.getElementById('b/w');
+let reflect=document.getElementById('reflect');
+let edge=document.getElementById('edge');
 //color select
 let color=document.querySelector('.cw');
 let random=document.querySelector('#random');
@@ -29,8 +34,14 @@ makeGrid(input);
 //all ways of changing grid size
 submit.addEventListener('click', ()=>{
     input=size.value;
-    clearGrid();
-    makeGrid(input);
+    if (boolNorm===true){
+        clearGrid();
+        makeGrid(input);
+    }
+    else if (boolImage===true){
+        clearGrid();
+        loadImage();
+    }
     size2.value=input;
 })
 
@@ -42,17 +53,21 @@ size2.addEventListener('change', ()=>{
     }
     else if (boolImage===true){
         clearGrid();
-        // call function that loads image
         loadImage();
-        // makeImageGrid(input);
     }
 })
 
 size.addEventListener('keypress', function(e){
     if (e.key==='Enter'){
         input=document.getElementById("size").value;
-        clearGrid();
-        makeGrid(input);
+        if (boolNorm===true){
+            clearGrid();
+            makeGrid(input);
+        }
+        else if (boolImage===true){
+            clearGrid();
+            loadImage();
+        }
         size2.value=input;
     }
 })
@@ -70,6 +85,20 @@ color.addEventListener('change', ()=>{
 random.addEventListener('click', ()=>{
     r=true;
 })
+eraser.addEventListener('click', ()=>{
+    r=false;
+    currentColor='white';
+})
+// filters
+BnW.addEventListener('click', ()=>{
+    blackAndWhite();
+})
+reflect.addEventListener('click', ()=>{
+    Reflect();
+})
+edge.addEventListener('click', ()=>{
+    Edge();
+})
 
 // look at guitar example to make it look nice during transition from clear to make
 // populate grid
@@ -86,6 +115,7 @@ function makeGrid(input){
         let divWidth=(0.99*(containerWidth/Math.sqrt(input)))+'px';
         div.style.width=divWidth;
         div.style.height=divWidth;
+        div.style.backgroundColor='white';
         container.appendChild(div);
         divCount++;
         divElements.push(div);
@@ -160,8 +190,14 @@ function showSize(input){
     if (typeof input==='undefined'){
         input===16;
     }
-    span.textContent='Grid Size: '+ Math.sqrt(input)+'x'+Math.sqrt(input);
-    selector.appendChild(span); 
+    if (boolNorm===true){
+        span.textContent='Grid Size: '+ Math.sqrt(input)+'x'+Math.sqrt(input);
+        selector.appendChild(span); 
+    }
+    else if (boolImage===true){
+        span.textContent='Grid Size: '+ numCols+'x'+numRows;
+        selector.appendChild(span); 
+    }
 }
 
 // vars for getting image data
@@ -207,6 +243,8 @@ function getImageArray(imageData){
     clearGrid();
     makeImageGrid(imageData, input);
 }
+let numCols;
+let numRows;
 function makeImageGrid(imageData, input){
     // make 2D array from imageData
     boolImage=true;
@@ -236,8 +274,8 @@ function makeImageGrid(imageData, input){
     let gridSize=input;
     imageContainer.style.minWidth=dimensionRatio*550+'px';
     imageContainer.style.height=550+'px';
-    let numCols=Math.round(Math.sqrt(gridSize*dimensionRatio));
-    let numRows=Math.round(gridSize/numCols);
+    numCols=Math.round(Math.sqrt(gridSize*dimensionRatio));
+    numRows=Math.round(gridSize/numCols);
 
     let proportions=getProportions(numCols, numRows);
     
@@ -249,7 +287,6 @@ function makeImageGrid(imageData, input){
     all.appendChild(imageContainer);
 
     divCount=0;
-    let cell_count=numCols*numRows;
 
     for (let i=0;i<numRows;i++){
         for(let j=0;j<numCols;j++){
@@ -313,6 +350,164 @@ function getProportions(numCols, numRows){
         correspPixelsRow: correspPixelsRow,
     }
 }
-// function clearImgGrid(){
-//     divElements=[];
-// }
+function blackAndWhite(){
+    let k=0;
+    let newArray=[];
+    if (boolNorm===true){
+        input=((typeof input==='NaN')||(typeof input ==='undefined')||input<16||input>100) ? 16 : input;
+        input=input*input;
+        for (let i=0;i<input;i++){
+            // get rgb values
+            let color=divElements[i].style.backgroundColor;
+            let arr=color.slice(4,-1);
+            let rgb=arr.split(',').map(value=>parseFloat(value.trim()));
+            // filter
+            let grey=(rgb[0]+rgb[1]+rgb[2])/3;
+            divElements[i].style.backgroundColor=`rgb(${grey}, ${grey}, ${grey})`;
+        }
+    }
+    else if (boolImage===true){
+        for (let i=0;i<numRows;i++){
+            newArray[i]=[];
+            for (let j=0;j<numCols;j++){
+                newArray[i][j]=imgElements[k];
+                // get the rgb values
+                let color=imgElements[k].style.backgroundColor;
+                let arr=color.slice(4,-1);
+                let rgb=arr.split(',').map(value=> parseFloat(value.trim()));
+                // filter
+                let grey=(rgb[0]+rgb[1]+rgb[2])/3
+                newArray[i][j].style.backgroundColor=`rgb(${grey}, ${grey}, ${grey})`;
+                k++;
+            }
+        }
+    }
+}
+
+function Reflect(){
+    let k=0;
+    let newArray=[];
+    let colorArray=[];
+    // if no image
+    if (boolNorm===true){
+        input=((typeof input==='NaN')||(typeof input ==='undefined')||input<16||input>100) ? 16 : input;
+        flip(k, newArray, colorArray, divElements, input, input);
+    }
+    // if image
+    else if (boolImage===true){
+        flip(k, newArray, colorArray, imgElements, numRows, numCols);
+    }
+}
+function flip(init, newArray, colorArray, elements, inputRow, inputCol){
+    for (let i=0;i<inputRow;i++){
+        newArray[i]=[];
+        colorArray[i]=[];
+        // duplicate array
+        for (let j=0;j<inputCol;j++){
+            newArray[i][j]=elements[init];
+            colorArray[i][j]=elements[init].style.backgroundColor;
+            console.log((colorArray[i][j]))
+            init++;  
+        }
+        // flip
+        for (let j=0;j<inputCol;j++){
+            newArray[i][inputCol-j-1].style.backgroundColor=colorArray[i][j];
+        }     
+    }
+}
+function Edge(){
+    let k=0;
+    let newArray=[];
+    let tmpArray=[];
+
+    if (boolNorm===true){
+        input=((typeof input==='NaN')||(typeof input ==='undefined')||input<16||input>100) ? 16 : input;
+        getEdgeTemplate(k, newArray, tmpArray, divElements, input, input);
+    }
+    // if newArray
+    else if (boolImage===true){
+        getEdgeTemplate(k, newArray, tmpArray, imgElements, numRows, numCols);
+    }
+}
+
+function getEdgeTemplate(init, newArray, tmpArray, elements, inputRow, inputCol){
+    //make borders black
+    for(let i=0;i<inputRow+2;i++){
+       tmpArray[i]=[];
+       for (let j=0;j<inputCol+2;j++){   
+            //top
+            tmpArray[i][j]=(elements[0]);
+            tmpArray[i][j][0]=0;
+            tmpArray[i][j][1]=0;
+            tmpArray[i][j][2]=0;
+        }
+    }
+    //copy newArray colors into tmp array
+    let color, arr, rgb;
+    for(let i=0;i<inputRow;i++){
+        newArray[i]=[];
+        for (let j=0;j<inputCol;j++){
+            newArray[i][j]=elements[init];
+            //copy color
+            color=elements[init].style.backgroundColor;
+            arr=color.slice(4,-1);
+            rgb=arr.split(',').map(value=> parseFloat(value.trim()));
+
+            tmpArray[i+1][j+1]=rgb;   
+            init++;
+        }
+        for (let j=0;j<inputCol;j++){
+        // perform necessary calculations
+            let rgbt=weightedSum(tmpArray, i, j, inputRow, inputCol);
+            if(!(typeof rgbt==='undefined')){
+            newArray[i][j].style.backgroundColor=rgbt.color;
+            console.log(rgbt.color);
+            }
+            else{
+                newArray[i][j].style.backgroundColor='black';
+            }
+        }
+    }
+}
+    //apply filter
+    
+    function weightedSum(tmpArray, i, j, inputRow, inputCol){        
+            // Calculate the squared differences
+            const redSquared = Math.pow(
+                (tmpArray[i+1][j][0] * -2) + 
+                (tmpArray[i+1][j+2][0] * 2) + 
+                (tmpArray[i][j+2][0]) +
+                (tmpArray[i][j][0] * -1) +
+                (tmpArray[i+2][j+2][0]) +
+                (tmpArray[i+2][j][0] * -1),
+                2
+            );
+        
+            const greenSquared = Math.pow(
+                (tmpArray[i+1][j][1] * -2) + 
+                (tmpArray[i+1][j+2][1] * 2) + 
+                (tmpArray[i][j+2][1]) +
+                (tmpArray[i][j][1] * -1) +
+                (tmpArray[i+2][j+2][1]) +
+                (tmpArray[i+2][j][1] * -1),
+                2
+            );
+        
+            const blueSquared = Math.pow(
+                (tmpArray[i+1][j][2] * -2) + 
+                (tmpArray[i+1][j+2][2] * 2) + 
+                (tmpArray[i][j+2][2]) +
+                (tmpArray[i][j][2] * -1) +
+                (tmpArray[i+2][j+2][2]) +
+                (tmpArray[i+2][j][2] * -1),
+                2
+            );
+        
+            // Calculate the color values
+            let red = Math.round(Math.sqrt(redSquared));
+            let green = Math.round(Math.sqrt(greenSquared));
+            let blue = Math.round(Math.sqrt(blueSquared));
+            return{
+                color:`rgb(${red},${green},${blue})`
+            };     
+    }
